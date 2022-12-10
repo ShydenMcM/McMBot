@@ -1,0 +1,2 @@
+# McMBot
+Discord bot
