@@ -10,3 +10,6 @@ Libraries used:
 
 Pre-requisites:
 * MySql connector Python
+
+## License
+OwO Bot is licensed under the terms of [GNU General Public License 3](https://github.com/ShydenMcM/McMBot/blob/main/LICENSE)
