@@ -5,11 +5,10 @@ branches: [ $default-branch ]
 
 jobs:
   deploy:
-    stage: deploy
     variables:
       DEPLOY_CURL_COMMAND_BODY: "'{\"signal\":\"restart\"}'"
       DEPLOY_CURL_COMMAND: 'curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $API_KEY" --data $DEPLOY_CURL_COMMAND_BODY https://control.sparkedhost.us/api/client/servers/85ca44fe/power'
-    script:
+    run:
       - apt-get update -qy
       - apt-get install -y lftp curl
       - exec $shell
@@ -18,5 +17,3 @@ jobs:
       - lftp -e "debug; set sftp:auto-confirm yes; set ssl:verify-certificate false; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; mirror -X .* -X .*/ -X venv/ -X resources/ --reverse --verbose --delete; bye"
       - echo "sending CURL command to server to reboot"
       - eval "$DEPLOY_CURL_COMMAND"
-    rules:
-      - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "main")
