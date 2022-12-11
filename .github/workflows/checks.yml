@@ -1,0 +1,29 @@
+name: Code Quality Checks
+on: [push, workflow_dispatch]
+branches-ignore: [ $default-branch ]
+
+jobs:
+  build:
+    runs-on: python:slim-buster
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache
+        uses: actions/cache@v3.1.0-beta.2
+        with:
+          path: 
+          - .cache/pip
+        run: pip install virtualenv
+          virtualenv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+  black:
+    run:
+      - pip install black
+      - echo "Performing Black formatting"
+      - black $CI_PROJECT_DIR
+
+  pylint:
+    run:
+      - pip install pylint
+      - echo "Performing lint checks"
+      - pylint $CI_PROJECT_NAME --disable=E0401
