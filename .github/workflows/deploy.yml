@@ -1,6 +1,8 @@
 name: Deploy
-on: push
-branches: [ $default-branch ]
+on:
+  push:
+    branches:
+      - $default-branch
 
 jobs:
   build:
@@ -8,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
   deploy:
-    variables:
+    env:
       DEPLOY_CURL_COMMAND_BODY: "'{\"signal\":\"restart\"}'"
       DEPLOY_CURL_COMMAND: 'curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $API_KEY" --data $DEPLOY_CURL_COMMAND_BODY https://control.sparkedhost.us/api/client/servers/85ca44fe/power'
     steps:
