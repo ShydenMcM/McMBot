@@ -28,7 +28,6 @@ jobs:
 
   pylint:
     steps:
-      - run:
-        - name: Performing lint checks
-        - run: pip install pylint
-        - run: pylint $CI_PROJECT_NAME --disable=E0401
+      - name: Performing lint checks
+      - run: pip install pylint
+      - run: pylint $CI_PROJECT_NAME --disable=E0401
