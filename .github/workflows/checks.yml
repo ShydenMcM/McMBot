@@ -1,19 +1,20 @@
 name: Code Quality Checks
 on: [push, workflow_dispatch]
-branches-ignore: [ $default-branch ]
+branches-ignore: main
 
 jobs:
   build:
-    runs-on: python:slim-buster
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Cache
-      - uses: actions/cache@v3.1.0-beta.2
+        uses: actions/cache@v3.1.0-beta.2
         with:
-          path: 
+          path:
           - .cache/pip
       - name: Install Venv
-      - run: pip install virtualenv
+        run: pip install virtualenv
       - name: Activate Venv
       - run: virtualenv venv
       - run: source venv/bin/activate
