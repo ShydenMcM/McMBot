@@ -8,26 +8,27 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Cache
-        uses: actions/cache@v3.1.0-beta.2
+      - uses: actions/cache@v3.1.0-beta.2
         with:
           path: 
           - .cache/pip
+      - name: Install Venv
+      - run: pip install virtualenv
+      - name: Activate Venv
+      - run: virtualenv venv
+      - run: source venv/bin/activate
+      - name: Install packages
+      - run: pip install -r requirements.txt
 
-  install pip:
-    steps:
-      run: pip install virtualenv
-        virtualenv venv
-        source venv/bin/activate
-        pip install -r requirements.txt
   black:
     steps:
-      run:
-        - pip install black
-        - echo "Performing Black formatting"
-        - black $CI_PROJECT_DIR
+      - name: Performing Black formatting
+      - run: pip install black
+      - run: black $CI_PROJECT_DIR
+
   pylint:
     steps:
-      run:
-        - pip install pylint
-        - echo "Performing lint checks"
-        - pylint $CI_PROJECT_NAME --disable=E0401
+      - run:
+        - name: Performing lint checks
+        - run: pip install pylint
+        - run: pylint $CI_PROJECT_NAME --disable=E0401
