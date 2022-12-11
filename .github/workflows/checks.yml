@@ -1,6 +1,7 @@
 name: Code Quality Checks
 on: [push, workflow_dispatch]
-branches-ignore: main
+branches-ignore:
+  - $default-branch
 
 jobs:
   build:
