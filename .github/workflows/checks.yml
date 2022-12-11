@@ -12,16 +12,16 @@ jobs:
         with:
           path: 
           - .cache/pip
-        run: pip install virtualenv
-          virtualenv venv
-          source venv/bin/activate
-          pip install -r requirements.txt
+  install pip:
+    run: pip install virtualenv
+      virtualenv venv
+      source venv/bin/activate
+      pip install -r requirements.txt
   black:
     run:
       - pip install black
       - echo "Performing Black formatting"
       - black $CI_PROJECT_DIR
-
   pylint:
     run:
       - pip install pylint
