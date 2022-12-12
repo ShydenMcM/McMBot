@@ -53,7 +53,7 @@ async def on_message(message):
         return
 
     if message.content == "hi":
-        await message.channel.send(gif_links.hello)
+        await message.channel.send(gif_links.get_hello())
 
     await bot.process_commands(message)
 
