@@ -23,7 +23,7 @@ jobs:
       - run: black ${{ github.workspace }}
       - name: Pylint
         run: pip install pylint
-      - run: pylint ${{ github.workspace }} --disable=E0401
+      - run: pylint ${{ github.workspace }} --disable=E0401,C0103
   deploy:
     runs-on: ubuntu-22.04
     environment: Test
