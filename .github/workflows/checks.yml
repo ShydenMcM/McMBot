@@ -18,18 +18,18 @@ jobs:
         run: virtualenv venv
       - run: source venv/bin/activate
       - name: Install packages
-        run: pip install -r ${GITHUB_WORKSPACE}/requirements.txt
+        run: pip install -r ${{ github.workspace }}/requirements.txt
 
   black:
     runs-on: ubuntu-22.04
     steps:
       - name: Performing Black formatting
         run: pip install black
-      - run: black ${GITHUB_WORKSPACE}
+      - run: black ${{ github.workspace }}
 
   pylint:
     runs-on: ubuntu-22.04
     steps:
       - name: Performing lint checks
         run: pip install pylint
-      - run: pylint ${GITHUB_WORKSPACE} --disable=E0401
+      - run: pylint ${{ github.workspace }} --disable=E0401
