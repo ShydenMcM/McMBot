@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 #      - run: apt-get update -qy
-      - run: apt-get install -y lftp curl
+      - run: sudo apt-get install -y lftp curl
       - run: exec $shell
       - run: echo "Starting deployment to server"
       - run: echo "Starting FTP upload"
