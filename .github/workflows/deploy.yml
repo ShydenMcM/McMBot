@@ -2,23 +2,28 @@ name: Deploy
 on:
   push:
     branches:
-      - $default-branch
+      - main
 
 jobs:
-  build:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
   deploy:
+    runs-on: ubuntu-22.04
+    environment: prod
     env:
-      DEPLOY_CURL_COMMAND_BODY: "'{\"signal\":\"restart\"}'"
-      DEPLOY_CURL_COMMAND: 'curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $API_KEY" --data $DEPLOY_CURL_COMMAND_BODY https://control.sparkedhost.us/api/client/servers/85ca44fe/power'
+      API_KEY: ${{ secrets.API_KEY }}
+      DEPLOY_CURL_COMMAND: 'curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $API_KEY" --data {\"signal\":\"restart\"} https://control.sparkedhost.us/api/client/servers/85ca44fe/power'
+      FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+      FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      FTP_HOST: ${{ secrets.FTP_HOST }}
     steps:
-      - run: apt-get update -qy
-      - run: apt-get install -y lftp curl
-      - run: exec $shell
-      - run: echo "Starting deployment to server"
-      - run: echo "Starting FTP upload"
-      - run: lftp -e "debug; set sftp:auto-confirm yes; set ssl:verify-certificate false; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; mirror -X .* -X .*/ -X venv/ -X resources/ --reverse --verbose --delete; bye"
-      - run: echo "sending CURL command to server to reboot"
-      - run: eval "$DEPLOY_CURL_COMMAND"
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: update packages
+        run: sudo apt-get update -qy
+      - name: install lftp
+        run: sudo apt-get install -y lftp curl
+      - name: restart shell
+        run: exec $shell
+      - name: perform FTP Upload
+        run: lftp -e "debug; set sftp:auto-confirm yes; set ssl:verify-certificate false; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; mirror -X .* -X .*/ -X venv/ -X resources/ --reverse --verbose --delete; bye"
+      - name: Reboot server
+        run: eval "$DEPLOY_CURL_COMMAND"

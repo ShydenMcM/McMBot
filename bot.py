@@ -24,7 +24,7 @@ class Bot(commands.Bot):
             status=discord.Status.online,
             activity=discord.Activity(
                 type=discord.ActivityType.playing,
-                name="Watching you",
+                name="Serving you",
             ),
         )
 
@@ -52,24 +52,8 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    # if message.content.startswith("smcm sc"):
-    #     score_unavailable_message = (
-    #         "`smcm score` has now been replaced with: `mcm score` or `/score`"
-    #     )
-    #     await message.channel.send(score_unavailable_message)
-    #
-    # if message.author.id == OWO_BOT_ID:
-    #     if "sacrificed" in message.content:
-    #         await message.reply(gif_links.get_sacrifice())
-    #     elif "sold" in message.content:
-    #         await message.reply(gif_links.get_money())
-    #     elif "you currently have **__0__ cowoncy!**" in message.content:
-    #         await message.reply(gif_links.get_no_money())
-    #     elif (
-    #         "finished a quest and earned:" in message.content
-    #         or "leveled up!" in message.content
-    #     ):
-    #         await message.reply(gif_links.get_applause())
+    if message.content == "hi":
+        await message.channel.send(gif_links.get_hello())
 
     await bot.process_commands(message)
 
@@ -119,26 +103,6 @@ async def ping(ctx: commands.Context):
             color=0x990000,
         )
     await ctx.send(embed=embed)
-
-
-# @bot.hybrid_command(
-#     name="score", with_app_command=True, description="Displays the player's score"
-# )
-# @commands.bot_has_permissions(view_channel=True, send_messages=True)
-# async def score(ctx: commands.Context):
-#     """Displays the player's score"""
-#
-#     embed = discord.Embed(
-#         title=f"{ctx.author.display_name}'s Score \n(**NOT WORKING YET!! COMING SOON**)",
-#         description=":medal::medal::medal::medal:",
-#         color=0x44FF44,
-#     )
-#     embed.add_field(
-#         name="OwO Scores:",
-#         value="`owo`: 0 \n" "`hunt`: 0 \n" "`battle`: 0 \n\n" "**Your Score: 0**",
-#         inline=True,
-#     )
-#     await ctx.send(embed=embed)
 
 
 bot.run(TOKEN)
