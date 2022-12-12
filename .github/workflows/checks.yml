@@ -12,10 +12,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Cache
-        uses: actions/cache@v3.1.0-beta.2
-        with:
-          cache: pip
       - name: Install Venv
         run: pip install virtualenv
       - name: Activate Venv
@@ -29,11 +25,11 @@ jobs:
     steps:
       - name: Performing Black formatting
         run: pip install black
-      - run: black $CI_PROJECT_DIR
+      - run: black ./
 
   pylint:
     runs-on: ubuntu-22.04
     steps:
       - name: Performing lint checks
         run: pip install pylint
-      - run: pylint $CI_PROJECT_NAME --disable=E0401
+      - run: pylint ./ --disable=E0401
