@@ -16,7 +16,7 @@ jobs:
         uses: actions/cache@v3.1.0-beta.2
         with:
           path:
-          - .cache/pip
+            - .cache/pip
       - name: Install Venv
         run: pip install virtualenv
       - name: Activate Venv
