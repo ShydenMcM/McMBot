@@ -25,6 +25,7 @@ jobs:
       - name: restart shell
         run: exec $shell
       - name: perform FTP Upload
-        run: lftp -e "debug; set sftp:auto-confirm yes; set ssl:verify-certificate false; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; mirror -X .* -X .*/ -X venv/ -X resources/ --reverse --verbose --delete; bye"
+        run: echo $FTP_USERNAME
+      - run: lftp -e "debug; set sftp:auto-confirm yes; set ssl:verify-certificate false; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; mirror -X .* -X .*/ -X venv/ -X resources/ --reverse --verbose --delete; bye"
       - name: Reboot server
         run: eval "$DEPLOY_CURL_COMMAND"
