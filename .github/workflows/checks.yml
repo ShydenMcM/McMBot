@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches-ignore:
-      - $default-branch
+      - main
 
 jobs:
   Checks:
