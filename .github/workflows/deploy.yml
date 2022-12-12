@@ -7,6 +7,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-22.04
+    environment: prod
     env:
       API_KEY: ${{ secrets.API_KEY }}
       DEPLOY_CURL_COMMAND_BODY: "'{\"signal\":\"restart\"}'"
