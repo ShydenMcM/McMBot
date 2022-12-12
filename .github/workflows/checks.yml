@@ -1,9 +1,10 @@
 name: Code Quality Checks
 on:
-  push:
-  branches-ignore:
-    - $default-branch
   workflow_dispatch:
+  push:
+    branches-ignore:
+      - $default-branch
+
 
 jobs:
   build:
