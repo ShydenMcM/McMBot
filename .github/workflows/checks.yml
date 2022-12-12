@@ -7,7 +7,7 @@ on:
 
 
 jobs:
-  Code Quality Checks:
+  Checks:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
