@@ -1,13 +1,13 @@
 """Bot"""
-import os
+import logging
 
 import discord
-
 from discord.ext import commands
-from references import gif_links
-import settings
 
-logger = settings.logging.getLogger("bot")
+import settings
+from references import gif_links
+
+logger = logging.getLogger("bot")
 config = settings.Config().load()
 
 
@@ -45,12 +45,11 @@ bot = Bot()
 
 @bot.event
 async def on_ready():
-    """Executes once the bot is up and running"""
-    logger.info(
-        f"{discord.version_info}\n" f"{bot.user} is connected to the following guilds:"
-    )
+    """Logging out bot information at startup"""
+    logger.info("%s", discord.version_info)
+    logger.info("%s is connected to the following guilds:", bot.user)
     for guild in bot.guilds:
-        logger.info(f"* {guild.name} (id: {guild.id})")
+        logger.info("* %s (id: %s)", guild.name, guild.id)
 
 
 @bot.event
@@ -82,17 +81,18 @@ async def sync(ctx: commands.Context):
     The colour of the embed shows whether this is;
     good (green),
     acceptable (orange),
-    or bad (red)"""
+    or bad (red)""",
 )
 @commands.bot_has_permissions(view_channel=True, send_messages=True)
 async def ping(ctx: commands.Context):
+    """Displays the latency in ms"""
     rounded_latency_time = round(bot.latency * 1000)
     if rounded_latency_time <= 50:
         colour = 0x44FF44
     elif rounded_latency_time <= 150:
         colour = 0xFF6600
     else:
-        colour = 0x990000,
+        colour = 0x990000
     embed = discord.Embed(
         title="PONG",
         description=f":ping_pong: The ping is **{rounded_latency_time}** milliseconds!",
@@ -100,5 +100,6 @@ async def ping(ctx: commands.Context):
     )
 
     await ctx.send(embed=embed)
+
 
 bot.run(config.BOT_TOKEN, root_logger=True)

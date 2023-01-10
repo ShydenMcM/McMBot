@@ -1,13 +1,15 @@
+"""Functions to support configuration amongst environments"""
+import os
 import pathlib
 from logging.config import dictConfig
+
 import discord
-
-import os
-
 from dotenv import load_dotenv
 
 
 class Config:
+    """Class to get any environment variable passed in"""
+
     def __init__(self):
         pass
 
@@ -18,6 +20,7 @@ class Config:
         return variable
 
     def load(self):
+        """Load the environment variable value"""
         load_dotenv(override=True)
         return self
 
@@ -30,8 +33,6 @@ COGS_DIR = BASE_DIR / "cogs"
 VIDEOCMDS_DIR = BASE_DIR / "videocmds"
 
 GUILDS_ID = discord.Object(id=int())
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-FEEDBACK_CH = int(os.getenv("FEEDBACK_CH", 0))
 
 LOGGING_CONFIG = {
     "version": 1,
@@ -40,41 +41,35 @@ LOGGING_CONFIG = {
         "verbose": {
             "format": "%(levelname)-10s - %(asctime)s - %(module)-15s : %(message)s"
         },
-        "standard": {
-            "format": "%(levelname)-10s - %(name)-15s : %(message)s"
-        }
+        "standard": {"format": "%(levelname)-10s - %(name)-15s : %(message)s"},
     },
     "handlers": {
         "console": {
-            'level': "DEBUG",
-            'class': "logging.StreamHandler",
-            'formatter': "standard"
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "standard",
         },
         "console2": {
-            'level': "WARNING",
-            'class': "logging.StreamHandler",
-            'formatter': "standard"
+            "level": "WARNING",
+            "class": "logging.StreamHandler",
+            "formatter": "standard",
         },
         "file": {
-            'level': "INFO",
-            'class': "logging.FileHandler",
-            'filename': "logs/infos.log",
-            'mode': "w",
-            'formatter': "verbose"
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": "logs/infos.log",
+            "mode": "w",
+            "formatter": "verbose",
         },
     },
     "loggers": {
-        "bot": {
-            'handlers': ['console'],
-            "level": "INFO",
-            "propagate": False
-        },
+        "bot": {"handlers": ["console"], "level": "INFO", "propagate": False},
         "discord": {
-            'handlers': ['console2', "file"],
+            "handlers": ["console2", "file"],
             "level": "INFO",
-            "propagate": False
-        }
-    }
+            "propagate": False,
+        },
+    },
 }
 
 dictConfig(LOGGING_CONFIG)
