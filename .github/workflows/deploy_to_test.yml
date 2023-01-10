@@ -18,7 +18,7 @@ jobs:
       - name: Install packages
         run: pip install -r requirements.txt
       - name: Isort
-        run: pip install black
+        run: pip install isort
       - run: isort ${{ github.workspace }}
       - name: Black
         run: pip install black
