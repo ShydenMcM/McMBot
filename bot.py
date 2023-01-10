@@ -1,30 +1,38 @@
 """Bot"""
 import os
+
 import discord
 
 from discord.ext import commands
-from dotenv import load_dotenv
 from references import gif_links
+import settings
 
-load_dotenv()
-TOKEN = os.getenv("DISCORD_TOKEN")
-
-prefix = commands.when_mentioned_or("mcm ", "mcm")
+logger = settings.logging.getLogger("bot")
+config = settings.Config().load()
 
 
 class Bot(commands.Bot):
-    """Prepares bot for use and perform application command (slash command) syncing"""
+    """Prepares bot for use"""
 
     def __init__(self):
-        intents = discord.Intents.all()
+        intents: discord.Intents = discord.Intents(
+            guilds=True,
+            members=True,
+            emojis=True,
+            webhooks=True,
+            presences=True,
+            messages=True,
+            reactions=True,
+            message_content=True,
+        )
         super().__init__(
-            command_prefix=prefix,
+            command_prefix=commands.when_mentioned_or("mcm ", "mcm"),
             case_insensitive=True,
             intents=intents,
             status=discord.Status.online,
             activity=discord.Activity(
                 type=discord.ActivityType.playing,
-                name="Serving you",
+                name="Coding is happening",
             ),
         )
 
@@ -38,11 +46,11 @@ bot = Bot()
 @bot.event
 async def on_ready():
     """Executes once the bot is up and running"""
-    print(
+    logger.info(
         f"{discord.version_info}\n" f"{bot.user} is connected to the following guilds:"
     )
     for guild in bot.guilds:
-        print(f"* {guild.name} (id: {guild.id})")
+        logger.info(f"* {guild.name} (id: {guild.id})")
 
 
 @bot.event
@@ -58,51 +66,39 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
-@bot.command()
+@bot.command(hidden=True)
 @commands.is_owner()
 async def sync(ctx: commands.Context):
     """Syncs slash commands to Discord
     Can only be run by the bot owner"""
     await bot.tree.sync()
-    print(f"{ctx.author} Synced slash commands")
+    await ctx.send(f"{ctx.author.display_name} Synced slash commands")
 
 
 @bot.hybrid_command(
     name="ping",
     with_app_command=True,
-    description="""Displays the latency in ms in a Discord Embed.
-                        The colour of the embed shows whether this good or bad""",
+    help="""Displays the latency in ms.
+    The colour of the embed shows whether this is;
+    good (green),
+    acceptable (orange),
+    or bad (red)"""
 )
 @commands.bot_has_permissions(view_channel=True, send_messages=True)
 async def ping(ctx: commands.Context):
-    """Displays the latency in ms in a Discord Embed.
-    The colour of the embed shows whether this good or bad"""
     rounded_latency_time = round(bot.latency * 1000)
     if rounded_latency_time <= 50:
-        embed = discord.Embed(
-            title="PONG",
-            description=f":ping_pong: The ping is **{rounded_latency_time}** milliseconds!",
-            color=0x44FF44,
-        )
-    elif rounded_latency_time <= 100:
-        embed = discord.Embed(
-            title="PONG",
-            description=f":ping_pong: The ping is **{rounded_latency_time}** milliseconds!",
-            color=0xFFD000,
-        )
-    elif rounded_latency_time <= 200:
-        embed = discord.Embed(
-            title="PONG",
-            description=f":ping_pong: The ping is **{rounded_latency_time}** milliseconds!",
-            color=0xFF6600,
-        )
+        colour = 0x44FF44
+    elif rounded_latency_time <= 150:
+        colour = 0xFF6600
     else:
-        embed = discord.Embed(
-            title="PONG",
-            description=f":ping_pong: The ping is **{rounded_latency_time}** milliseconds!",
-            color=0x990000,
-        )
+        colour = 0x990000,
+    embed = discord.Embed(
+        title="PONG",
+        description=f":ping_pong: The ping is **{rounded_latency_time}** milliseconds!",
+        color=colour,
+    )
+
     await ctx.send(embed=embed)
 
-
-bot.run(TOKEN)
+bot.run(config.BOT_TOKEN, root_logger=True)
