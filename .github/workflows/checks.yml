@@ -25,7 +25,7 @@ jobs:
         run: pip install pylint
       - run: pylint ${{ github.workspace }} --disable=E0401,C0103
   deploy:
-    if: jobs.Checks.result == success
+    if: job.Checks.result == success
     runs-on: ubuntu-22.04
     environment: Test
     env:
