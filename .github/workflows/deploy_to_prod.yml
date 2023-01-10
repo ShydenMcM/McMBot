@@ -1,0 +1,29 @@
+name: Deploy to Prod
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    environment: Prod
+    env:
+      API_KEY: ${{ secrets.API_KEY }}
+      DEPLOY_CURL_COMMAND: 'curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $API_KEY" --data {\"signal\":\"restart\"} https://control.sparkedhost.us/api/client/servers/85ca44fe/power'
+      FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+      FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      FTP_HOST: ${{ secrets.FTP_HOST }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: update packages
+        run: sudo apt-get update -qy
+      - name: install lftp
+        run: sudo apt-get install -y lftp curl
+      - name: restart shell
+        run: exec $shell
+      - name: perform FTP Upload
+        run: lftp -e "debug; set sftp:auto-confirm yes; set ssl:verify-certificate false; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; mirror -X .* -X .*/ -X venv/ -X resources/ --reverse --verbose --delete; bye"
+      - name: Reboot server
+        run: eval "$DEPLOY_CURL_COMMAND"
