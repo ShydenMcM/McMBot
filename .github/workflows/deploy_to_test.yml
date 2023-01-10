@@ -5,6 +5,24 @@ on:
       - main
 
 jobs:
+  Checks:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Venv
+        run: pip install virtualenv
+      - name: Activate Venv
+        run: virtualenv venv
+      - run: source venv/bin/activate
+      - name: Install packages
+        run: pip install -r requirements.txt
+      - name: Black
+        run: pip install black
+      - run: black ${{ github.workspace }}
+      - name: Pylint
+        run: pip install pylint
+      - run: pylint ${{ github.workspace }} --disable=E0401,C0103
   deploy:
     needs: Checks.success
     runs-on: ubuntu-22.04
