@@ -1,6 +1,5 @@
-name: Code Quality Checks
+name: Deploy to Test
 on:
-  workflow_dispatch:
   push:
     branches-ignore:
       - main
@@ -18,6 +17,9 @@ jobs:
       - run: source venv/bin/activate
       - name: Install packages
         run: pip install -r requirements.txt
+      - name: Isort
+        run: pip install isort
+      - run: isort ${{ github.workspace }}
       - name: Black
         run: pip install black
       - run: black ${{ github.workspace }}
@@ -25,6 +27,7 @@ jobs:
         run: pip install pylint
       - run: pylint ${{ github.workspace }} --disable=E0401,C0103
   deploy:
+    needs: Checks
     runs-on: ubuntu-22.04
     environment: Test
     env:
