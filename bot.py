@@ -84,15 +84,14 @@ async def sync(ctx: commands.Context[Bot]):
 @bot.hybrid_command(
     name="ping",
     with_app_command=True,
-    help="""Displays the latency in ms.
-    The colour of the embed shows whether this is;
-    good (green),
-    acceptable (orange),
-    or bad (red)""",
 )
 @commands.bot_has_permissions(view_channel=True, send_messages=True)
 async def ping(ctx: commands.Context[Bot]):
-    """Displays the latency in ms"""
+    """Displays the latency in ms.
+    The colour of the embed shows whether this is;
+    good (green),
+    acceptable (orange),
+    or bad (red)"""
     rounded_latency_time = round(bot.latency * 1000)
     if rounded_latency_time <= 50:
         colour = 0x44FF44
