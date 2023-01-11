@@ -24,8 +24,8 @@ jobs:
         run: pip install black
       - run: black ${{ github.workspace }}
       - name: Pylint
-        run: pip install pylint
-      - run: pylint ${{ github.workspace }} --disable=E0401,C0103
+        run: pip install pyright
+      - run: pyright ${{ github.workspace }}
   deploy:
     needs: Checks
     runs-on: ubuntu-22.04

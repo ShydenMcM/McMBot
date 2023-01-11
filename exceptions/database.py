@@ -15,7 +15,7 @@ class DatabaseAlreadyExists(Exception):
         message -- explanation of the error
     """
 
-    def __init__(self, name, message="A database with this name already exists"):
+    def __init__(self, name: str, message: str = "A database with this name already exists"):
         self.name = name
         self.message = message
         super().__init__(self.message)
@@ -32,7 +32,7 @@ class DatabaseDoesNotExist(Exception):
         message -- explanation of the error
     """
 
-    def __init__(self, name, message="A database with this name does not exist"):
+    def __init__(self, name: str, message: str = "A database with this name does not exist"):
         self.name = name
         self.message = message
         super().__init__(self.message)
