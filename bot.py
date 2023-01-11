@@ -46,6 +46,10 @@ bot = Bot()
 @bot.event
 async def on_ready():
     """Logging out bot information at startup"""
+    logger.debug("Test debug log")
+    logger.warning("Test warning log")
+    logger.error("Test error log")
+    logger.info("*******************************************************************")
     logger.info("%s", discord.version_info)
     logger.info("%s is connected to the following guilds:", bot.user)
     for guild in bot.guilds:
