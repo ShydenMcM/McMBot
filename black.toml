@@ -1,4 +1,0 @@
-[tool.black]
-line-length = 125
-skip-string-normalization = true
-force-exclude = "LICENSE|.+.toml|.+.txt|.+.rst|.+.sql|.+.json|.+.md|.+.bat|.+.service|.+.sql|.+.yml|.+.env"

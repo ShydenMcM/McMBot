@@ -3,8 +3,7 @@ import os
 import pathlib
 from logging.config import dictConfig
 
-import discord
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # type: ignore
 
 
 class Config:
@@ -13,14 +12,14 @@ class Config:
     def __init__(self):
         pass
 
-    def __getattr__(self, attr):
+    def __getattr__(self, attr: str):
         variable = os.getenv(attr)
         if variable == "":
             return None
         return variable
 
     def load(self):
-        """Load the environment variable value"""
+        """Load"""
         load_dotenv(override=True)
         return self
 

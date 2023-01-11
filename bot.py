@@ -2,6 +2,7 @@
 import logging
 
 import discord
+from discord import Message
 from discord.ext import commands
 
 import settings
@@ -31,16 +32,18 @@ class Bot(commands.Bot):
             intents=intents,
             status=config.Status,
             activity=discord.Activity(
-                type=int(config.ACTIVITY_TYPE),
+                type=int(config.ACTIVITY_TYPE),  # type: ignore
                 name=config.ACTIVITY_NAME,
             ),
         )
 
-    async def on_command_error(self, ctx, error):  # pylint: disable=W0221
-        await ctx.reply(error, ephemeral=True)
-
 
 bot = Bot()
+
+
+@bot.event
+async def on_command_error(ctx: commands.Context[Bot], error: str):
+    await ctx.reply(error, ephemeral=True)
 
 
 @bot.event
@@ -57,7 +60,7 @@ async def on_ready():
 
 
 @bot.event
-async def on_message(message):
+async def on_message(message: Message):
     """Actions based on messages read"""
     message.content = message.content.lower()
     if message.author == bot.user:
@@ -71,7 +74,7 @@ async def on_message(message):
 
 @bot.command(hidden=True)
 @commands.is_owner()
-async def sync(ctx: commands.Context):
+async def sync(ctx: commands.Context[Bot]):
     """Syncs slash commands to Discord
     Can only be run by the bot owner"""
     await bot.tree.sync()
@@ -88,7 +91,7 @@ async def sync(ctx: commands.Context):
     or bad (red)""",
 )
 @commands.bot_has_permissions(view_channel=True, send_messages=True)
-async def ping(ctx: commands.Context):
+async def ping(ctx: commands.Context[Bot]):
     """Displays the latency in ms"""
     rounded_latency_time = round(bot.latency * 1000)
     if rounded_latency_time <= 50:
@@ -106,4 +109,4 @@ async def ping(ctx: commands.Context):
     await ctx.send(embed=embed)
 
 
-bot.run(config.BOT_TOKEN, root_logger=True)
+bot.run(str(config.BOT_TOKEN), root_logger=True)
