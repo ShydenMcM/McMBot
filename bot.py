@@ -29,10 +29,10 @@ class Bot(commands.Bot):
             command_prefix=commands.when_mentioned_or("mcm ", "mcm"),
             case_insensitive=True,
             intents=intents,
-            status=discord.Status.online,
+            status=config.Status,
             activity=discord.Activity(
-                type=discord.ActivityType.playing,
-                name="Coding is happening",
+                type=int(config.ACTIVITY_TYPE),
+                name=config.ACTIVITY_NAME,
             ),
         )
 
